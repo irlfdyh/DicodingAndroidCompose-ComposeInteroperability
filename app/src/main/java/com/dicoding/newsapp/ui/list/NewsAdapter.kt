@@ -3,6 +3,7 @@ package com.dicoding.newsapp.ui.list
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.compose.material.MaterialTheme
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -31,16 +32,15 @@ class NewsAdapter(private val onItemClick: (NewsEntity) -> Unit) : ListAdapter<N
         binding.root
     ) {
         fun bind(news: NewsEntity) {
-            binding.tvItemTitle.text = news.title
-            binding.tvItemPublishedDate.text = news.publishedAt
-            Glide.with(itemView.context)
-                .load(news.urlToImage)
-                .apply(
-                    RequestOptions.placeholderOf(R.drawable.ic_loading).error(R.drawable.ic_error)
-                )
-                .into(binding.imgPoster)
-            itemView.setOnClickListener {
-                onItemClick(news)
+            binding.composeView.setContent {
+                MaterialTheme {
+                    NewsItem(
+                        urlToImage = news.urlToImage,
+                        title = news.title,
+                        publishedAt = news.publishedAt,
+                        onItemClick = { onItemClick(news) }
+                    )
+                }
             }
         }
     }
